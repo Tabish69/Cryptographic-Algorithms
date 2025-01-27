@@ -1,4 +1,6 @@
 import re
+import numpy as np
+import math
 
 class ClassicCiphers:
     def __init__(self, text):
@@ -83,7 +85,51 @@ class ClassicCiphers:
         print(result)
 
     def hillCipher(self, key, encrypt=True):
-        return 0
+        def make_key_matrix(key):
+            key=key.upper()
+            matrix=list(ord(i)-65 for i in key)
+            if(len(key)==9):
+                return np.array(matrix).reshape(3,3)
+            elif(len(key)==4):
+                return np.array(matrix).reshape(2,2)
+            else:
+                raise ValueError("Invalid key length. Use 4 (2x2) or 9 (3x3) characters.")
 
-c=ClassicCiphers("HELLO")
-c.playfairCipher("MONARCHY")
+
+        def make_plaintext_matrix():
+            self.text=self.text.upper()
+            key_size=3 if len(key)==9 else 2
+            while(len(self.text)%key_size!=0):
+                self.text+='X'
+            self.text=np.array([ord(i) - 65 for i in self.text])
+            return self.text.reshape(-1,key_size)
+
+        def mod_inverse(a):
+            a%=26
+            for x in range(1,26):
+                if(a*x)%26==1:
+                    return x
+            raise ValueError("Modular inverse does not exist")
+
+        def make_inverse(matrix):
+            det = int(round(np.linalg.det(matrix)))
+            det%=26
+            det_inv = mod_inverse(det)
+            adjugate = np.round(np.linalg.inv(matrix) * np.linalg.det(matrix)).astype(int) % 26
+            return (det_inv * adjugate) % 26
+
+        key_matrix = make_key_matrix(key)
+        plaintext_matrix = make_plaintext_matrix()
+
+        if(encrypt):
+            result=np.dot(key_matrix,plaintext_matrix.T).T%26
+            result="".join(chr(val+65) for row in result for val in row)
+            print(result)
+        else:
+            inverse_key_matrix=make_inverse(key_matrix)
+            result=np.dot(inverse_key_matrix,plaintext_matrix.T).T%26
+            result = "".join(chr(val+65) for row in result for val in row)
+            print(result)
+
+c=ClassicCiphers("INDIA")
+c.hillCipher("RRFVSVCCT", encrypt=True)
