@@ -131,5 +131,27 @@ class ClassicCiphers:
             result = "".join(chr(val+65) for row in result for val in row)
             print(result)
 
-c=ClassicCiphers("INDIA")
-c.hillCipher("RRFVSVCCT", encrypt=True)
+    def railfenceCipher(self, depth, encrypt=True):
+        matrix=np.full((depth, len(self.text)),'')
+        i,j=0,0
+        if(encrypt):
+            while(j<len(self.text)):
+                while(i<depth and j<len(self.text)):
+                    matrix[i,j]=self.text[j]
+                    i+=1
+                    j+=1
+
+                else:
+                    i-=2
+                    while(i>0 and j<len(self.text)):
+                        matrix[i, j] = self.text[j]
+                        i-=1
+                        j+=1
+
+        result="".join(val for row in matrix for val in row).strip()
+        print(result)
+
+
+
+c=ClassicCiphers("paymore")
+c.railfenceCipher(3, encrypt=True)
