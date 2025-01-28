@@ -1,6 +1,5 @@
 import re
 import numpy as np
-import math
 
 class ClassicCiphers:
     def __init__(self, text):
@@ -147,6 +146,8 @@ class ClassicCiphers:
                         matrix[i, j] = self.text[j]
                         i-=1
                         j+=1
+        else:
+
 
         result="".join(val for row in matrix for val in row).strip()
         print(result)
