@@ -132,27 +132,41 @@ class ClassicCiphers:
 
     def railfenceCipher(self, depth, encrypt=True):
         matrix=np.full((depth, len(self.text)),'')
-        i,j=0,0
+        dir_down=False
+        row,col=0,0
+        for i in range(len(self.text)):
+            if(row==0) or (row==depth-1):
+                dir_down=not dir_down
+            matrix[row,col]=self.text[i] if(encrypt) else '*'
+            col+=1
+            if(dir_down):
+                row+=1
+            else:
+                row-=1
         if(encrypt):
-            while(j<len(self.text)):
-                while(i<depth and j<len(self.text)):
-                    matrix[i,j]=self.text[j]
-                    i+=1
-                    j+=1
-
-                else:
-                    i-=2
-                    while(i>0 and j<len(self.text)):
-                        matrix[i, j] = self.text[j]
-                        i-=1
-                        j+=1
+            result="".join(val for row in matrix for val in row).strip()
+            print(matrix)
+            print(result)
         else:
+            k=0
+            for i in range(depth):
+                for j in range(len(self.text)):
+                    if(matrix[i,j]=='*') and k<len(self.text):
+                        matrix[i,j]=self.text[k]
+                        k+=1
+            print(matrix)
+            dir_down = False
+            row, col = 0, 0
+            for i in range(len(self.text)):
+                if (row == 0) or (row == depth - 1):
+                    dir_down = not dir_down
+                print(matrix[row,col], end='')
+                col += 1
+                if (dir_down):
+                    row += 1
+                else:
+                    row -= 1
 
 
-        result="".join(val for row in matrix for val in row).strip()
-        print(result)
-
-
-
-c=ClassicCiphers("paymore")
-c.railfenceCipher(3, encrypt=True)
+c=ClassicCiphers("poamrye")
+c.railfenceCipher(3, encrypt=False)
