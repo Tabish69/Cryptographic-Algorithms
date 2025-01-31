@@ -1,5 +1,6 @@
 import re
 import numpy as np
+import math
 
 class ClassicCiphers:
     def __init__(self, text):
@@ -124,6 +125,7 @@ class ClassicCiphers:
             result=np.dot(key_matrix,plaintext_matrix.T).T%26
             result="".join(chr(val+65) for row in result for val in row)
             print(result)
+
         else:
             inverse_key_matrix=make_inverse(key_matrix)
             result=np.dot(inverse_key_matrix,plaintext_matrix.T).T%26
@@ -131,6 +133,7 @@ class ClassicCiphers:
             print(result)
 
     def railfenceCipher(self, depth, encrypt=True):
+
         matrix=np.full((depth, len(self.text)),'')
         dir_down=False
         row,col=0,0
@@ -143,10 +146,12 @@ class ClassicCiphers:
                 row+=1
             else:
                 row-=1
+
         if(encrypt):
             result="".join(val for row in matrix for val in row).strip()
             print(matrix)
             print(result)
+
         else:
             k=0
             for i in range(depth):
@@ -168,5 +173,26 @@ class ClassicCiphers:
                     row -= 1
 
 
-c=ClassicCiphers("poamrye")
-c.railfenceCipher(3, encrypt=False)
+    def columnarTransposition(self,keyword,encrypt=True):
+
+        if(encrypt):
+            self.text=list(self.text)
+            row=math.ceil(len(self.text)/len(keyword))
+            col=len(keyword)
+            key=sorted(list(keyword))
+            result=""
+            self.text.extend(' '*int((row*col)-len(self.text)))
+            matrix=[self.text[i:i+col] for i in range(0,len(self.text),col)]
+            k=0
+            for _ in range(col):
+                curr_index=keyword.index(key[k])
+                result+= "".join([row[curr_index] for row in matrix])
+                k+=1
+            print(result)
+
+        else:
+            pass
+
+
+c=ClassicCiphers("Paymoreattention")
+c.columnarTransposition("CADB")
