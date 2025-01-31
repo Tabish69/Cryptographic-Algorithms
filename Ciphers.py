@@ -181,18 +181,42 @@ class ClassicCiphers:
             col=len(keyword)
             key=sorted(list(keyword))
             result=""
-            self.text.extend(' '*int((row*col)-len(self.text)))
+            self.text.extend('_'*int((row*col)-len(self.text)))
             matrix=[self.text[i:i+col] for i in range(0,len(self.text),col)]
-            k=0
-            for _ in range(col):
-                curr_index=keyword.index(key[k])
+            for i in range(col):
+                curr_index=keyword.index(key[i])
                 result+= "".join([row[curr_index] for row in matrix])
-                k+=1
             print(result)
 
         else:
-            pass
+            self.text = list(self.text)
+            row = math.ceil(len(self.text) / len(keyword))
+            col = len(keyword)
+            key =sorted(list(keyword))
+            k=0
+            m=0
+            result = ""
+            matrix=[]
+            for _ in range(row):
+                matrix += [[None]*col]
+
+            for _ in range(col):
+                curr_index=keyword.index(key[k])
+                for j in range(row):
+                    matrix[j][curr_index]=self.text[m]
+                    m+=1
+                k+=1
+            try:
+                result="".join(sum(matrix,[]))
+            except TypeError:
+                raise TypeError("Do not have same letters in key")
+
+            result=result.strip('_')
+            print(result)
 
 
-c=ClassicCiphers("Paymoreattention")
-c.columnarTransposition("CADB")
+
+
+
+c=ClassicCiphers("aoann eti_pm eoyrtt_")
+c.columnarTransposition("CADB",encrypt=False)
