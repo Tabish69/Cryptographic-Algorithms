@@ -1,2 +1,2 @@
 # Cryptographic Algorithms
- This is a project displaying the workings of various cryptographic algorithms. 
+This is a personal project for encryption and decryption of plaintext using classical encryption algorithms such as Caesar cipher, vigenere cipher, etc. 
